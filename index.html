@@ -10,7 +10,6 @@
 <body>
     <div class="app-container">
         
-        <!-- ব্যালেন্স এবং ইউজার সেকশন -->
         <div class="header">
             <h3 id="username-display">Hello, User</h3>
             <div class="balance-box">
@@ -18,14 +17,15 @@
             </div>
         </div>
 
-        <!-- ১. ট্যাপ করার পেজ (ডিফল্ট) -->
+        <!-- ট্যাপ করার মূল পেজ -->
         <div id="tap-page" class="page-content">
             <div class="coin-section">
-                <button id="tap-btn" onclick="earnPoints()">🪙</button>
+                <!-- এখানে ফাংশনের নাম handleTap() দেওয়া হয়েছে -->
+                <button id="tap-btn" onclick="handleTap()">🪙</button>
             </div>
         </div>
 
-        <!-- ২. টাস্ক পেজ (চ্যানেল সাবস্ক্রাইব) -->
+        <!-- টাস্ক পেজ -->
         <div id="tasks-page" class="page-content hidden">
             <h3>📋 Available Tasks</h3>
             <div class="task-card">
@@ -35,7 +35,7 @@
             </div>
         </div>
 
-        <!-- ৩. রেফারেল পেজ -->
+        <!-- রেফারেল পেজ -->
         <div id="refer-page" class="page-content hidden">
             <h3>👥 Invite Friends</h3>
             <p>Per Refer Reward: <b>+2000 Coins</b></p>
@@ -45,7 +45,7 @@
             </div>
         </div>
 
-        <!-- ৪. উইথড্র পেজ (টাকা তোলার নিয়ম) -->
+        <!-- উইথড্র পেজ -->
         <div id="withdraw-page" class="page-content hidden">
             <h3>💰 Withdraw Money</h3>
             <p style="font-size: 0.9rem; color: #ccc;">Minimum Withdraw: 50,000 Coins</p>
@@ -61,7 +61,7 @@
             </div>
         </div>
 
-        <!-- নিচের নেভিগেশন বটম মেনু (Bottom Menu) -->
+        <!-- বটম মেনু -->
         <div class="bottom-nav">
             <button onclick="switchPage('tap-page')">🪙 Tap</button>
             <button onclick="switchPage('tasks-page')">📋 Tasks</button>
