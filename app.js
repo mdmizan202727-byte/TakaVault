@@ -1,37 +1,89 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Earn Money Mini App</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Telegram SDK -->
-    <script src="https://telegram.org"></script>
-</head>
-<body>
-    <div class="app-container">
-        <div class="header">
-            <h2>🪙 Tap & Earn Bot</h2>
-            <div class="balance-box">
-                <span id="balance">0</span> <small>Points</small>
-            </div>
-        </div>
+const tg = window.Telegram.WebApp;
+tg.expand();
 
-        <!-- মূল ইনকাম বাটন -->
-        <div class="coin-section">
-            <button id="tap-btn" onclick="earnPoints()">🪙</button>
-        </div>
+// টেলিগ্রাম ইউজারনেম শো করা
+if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+    document.getElementById('username-display').innerText = `Hello, ${tg.initDataUnsafe.user.first_name}`;
+}
 
-        <!-- সোশ্যাল টাস্ক সেকশন -->
-        <div class="tasks-section">
-            <a href="https://t.me" target="_blank" class="task-btn">📢 Join Telegram Channel (+500)</a>
-        </div>
+// ডাটা লোড করা
+let points = localStorage.getItem('user_points') ? parseInt(localStorage.getItem('user_points')) : 0;
+document.getElementById('balance').innerText = points;
 
-        <div class="footer">
-            <button class="nav-btn" onclick="claimDaily()">🎁 Daily Bonus</button>
-            <button class="nav-btn" onclick="withdraw()">💰 Withdraw</button>
-        </div>
-    </div>
-    <script src="app.js"></script>
-</body>
-</html>
+// ১. পেজ পরিবর্তন করার ফাংশন
+function switchPage(pageId) {
+    const pages = document.querySelectorAll('.page-content');
+    pages.forEach(page => page.classList.add('hidden'));
+    document.getElementById(pageId).classList.remove('hidden');
+}
+
+// ২. ট্যাপ ইনকাম
+function earnPoints() {
+    points += 1;
+    updateBalance();
+    if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+}
+
+// ৩. চ্যানেল সাবস্ক্রাইব টাস্ক কমপ্লিট করা
+function completeTask(url, reward, taskId) {
+    if (localStorage.getItem(taskId)) {
+        tg.showAlert("❌ You have already completed this task!");
+        return;
+    }
+    
+    // ইউজারকে চ্যানেলে পাঠানো
+    window.open(url, '_blank');
+    
+    // টেলিগ্রাম মিনি অ্যাপে ২ সেকেন্ড পর পয়েন্ট অ্যাড হবে
+    setTimeout(() => {
+        points += reward;
+        updateBalance();
+        localStorage.setItem(taskId, 'true');
+        document.getElementById(taskId + '-btn').innerText = "✅ Completed";
+        document.getElementById(taskId + '-btn').style.background = "#10b981";
+        tg.showAlert(`🎉 +${reward} Coins Added for joining channel!`);
+    }, 2000);
+}
+
+// ৪. রেফারেল লিংক তৈরি ও কপি
+let botUsername = "@TakaVaultbot"; // আপনার বোটের ইউজারনেম এখানে দিন (যেমন: MyEarn_bot)
+let userId = tg.initDataUnsafe?.user?.id || "12345";
+let refLink = `https://t.me{botUsername}?start=${userId}`;
+document.getElementById('refer-link').value = refLink;
+
+function copyReferLink() {
+    let copyText = document.getElementById('refer-link');
+    copyText.select();
+    navigator.clipboard.writeText(copyText.value);
+    tg.showAlert("📋 Referral Link Copied!");
+}
+
+// ৫. টাকা তোলার (Withdraw) রিকোয়েস্ট প্রসেস
+function processWithdraw() {
+    let method = document.getElementById('method').value;
+    let number = document.getElementById('wallet-number').value;
+    let amount = parseInt(document.getElementById('withdraw-amount').value);
+
+    if (!number || !amount) {
+        tg.showAlert("❌ Please fill in all fields!");
+        return;
+    }
+    if (amount < 50000) {
+        tg.showAlert("❌ Minimum withdraw is 50,000 Coins!");
+        return;
+    }
+    if (points < amount) {
+        tg.showAlert("❌ You do not have enough coins!");
+        return;
+    }
+
+    // ব্যালেন্স কাটা এবং কনফার্মেশন
+    points -= amount;
+    updateBalance();
+    tg.showAlert(`✅ Withdrawal Request Submitted!\nMethod: ${method}\nNumber: ${number}\nAmount: ${amount} Coins.\nAdmin will pay you soon.`);
+}
+
+function updateBalance() {
+    document.getElementById('balance').innerText = points;
+    localStorage.setItem('user_points', points);
+}
