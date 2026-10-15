@@ -3,34 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Earn Money Mini App</title>
+    <title>Premium Tap & Earn Bot</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Telegram SDK -->
     <script src="https://telegram.org"></script>
 </head>
 <body>
     <div class="app-container">
+        
+        <!-- ব্যালেন্স এবং ইউজার সেকশন -->
         <div class="header">
-            <h2>🪙 Tap & Earn Bot</h2>
+            <h3 id="username-display">Hello, User</h3>
             <div class="balance-box">
-                <span id="balance">0</span> <small>Points</small>
+                <span id="balance">0</span> <small>Coins</small>
             </div>
         </div>
 
-        <!-- মূল ইনকাম বাটন -->
-        <div class="coin-section">
-            <button id="tap-btn" onclick="earnPoints()">🪙</button>
+        <!-- ১. ট্যাপ করার পেজ (ডিফল্ট) -->
+        <div id="tap-page" class="page-content">
+            <div class="coin-section">
+                <button id="tap-btn" onclick="earnPoints()">🪙</button>
+            </div>
         </div>
 
-        <!-- সোশ্যাল টাস্ক সেকশন -->
-        <div class="tasks-section">
-            <a href="https://t.me" target="_blank" class="task-btn">📢 Join Telegram Channel (+500)</a>
+        <!-- ২. টাস্ক পেজ (চ্যানেল সাবস্ক্রাইব) -->
+        <div id="tasks-page" class="page-content hidden">
+            <h3>📋 Available Tasks</h3>
+            <div class="task-card">
+                <p>@TakaVaultBDBot</p>
+                <small>Reward: +5000 Coins</small>
+                <button id="task1-btn" onclick="completeTask('https://t.me', 5000, 'task1')">Join Channel</button>
+            </div>
         </div>
 
-        <div class="footer">
-            <button class="nav-btn" onclick="claimDaily()">🎁 Daily Bonus</button>
-            <button class="nav-btn" onclick="withdraw()">💰 Withdraw</button>
+        <!-- ৩. রেফারেল পেজ -->
+        <div id="refer-page" class="page-content hidden">
+            <h3>👥 Invite Friends</h3>
+            <p>Per Refer Reward: <b>+2000 Coins</b></p>
+            <div class="refer-box">
+                <input type="text" id="refer-link" readonly value="Loading...">
+                <button onclick="copyReferLink()">Copy</button>
+            </div>
         </div>
+
+        <!-- ৪. উইথড্র পেজ (টাকা তোলার নিয়ম) -->
+        <div id="withdraw-page" class="page-content hidden">
+            <h3>💰 Withdraw Money</h3>
+            <p style="font-size: 0.9rem; color: #ccc;">Minimum Withdraw: 50,000 Coins</p>
+            <div class="withdraw-form">
+                <select id="method">
+                    <option value="bkash">bKash</option>
+                    <option value="nagad">Nagad</option>
+                    <option value="recharge">Mobile Recharge</option>
+                </select>
+                <input type="number" id="wallet-number" placeholder="Enter Your Number">
+                <input type="number" id="withdraw-amount" placeholder="Enter Amount of Coins">
+                <button onclick="processWithdraw()">Submit Request</button>
+            </div>
+        </div>
+
+        <!-- নিচের নেভিগেশন বটম মেনু (Bottom Menu) -->
+        <div class="bottom-nav">
+            <button onclick="switchPage('tap-page')">🪙 Tap</button>
+            <button onclick="switchPage('tasks-page')">📋 Tasks</button>
+            <button onclick="switchPage('refer-page')">👥 Refer</button>
+            <button onclick="switchPage('withdraw-page')">💰 Withdraw</button>
+        </div>
+
     </div>
     <script src="app.js"></script>
 </body>
