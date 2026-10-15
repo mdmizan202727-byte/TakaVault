@@ -46,7 +46,7 @@ function completeTask(url, reward, taskId) {
 }
 
 // ৪. রেফারেল লিংক তৈরি ও কপি
-let botUsername = "@TakaVaultbot"; // আপনার বোটের ইউজারনেম এখানে দিন (যেমন: MyEarn_bot)
+let botUsername = @TakaVaultbot; // আপনার বোটের ইউজারনেম এখানে দিন (যেমন: MyEarn_bot)
 let userId = tg.initDataUnsafe?.user?.id || "12345";
 let refLink = `https://t.me{botUsername}?start=${userId}`;
 document.getElementById('refer-link').value = refLink;
